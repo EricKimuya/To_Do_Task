@@ -52,6 +52,23 @@ def delete_task(id):
     except Exception as e:
         return f"There was a problem deleting that task: {e}"
 
+@app.route('/edit/<int:id>', methods=['GET', 'POST'])
+def edit_task(id):
+    task = Todo.query.get_or_404(id)
+
+    if request.method == 'POST':
+        task.content = request.form['content']
+
+        try:
+            db.session.commit()
+            return redirect('/')
+        except Exception as e:
+            return f"There was an issue updating the task: {e}"
+
+    else:
+        return render_template('edit.html', task=task)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
