@@ -1,12 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+def nairobi_time():
+    return datetime.now(pytz.timezone('Africa/Nairobi'))
+    return datetime.now(timezone)
 
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,7 +40,7 @@ def index():
             return "Task content cannot be empty"
 
     else:
-        tasks = Todo.query.order_by(Todo.date_created.desc()).all()
+        tasks = Todo.query.order_by(Todo.id.asc()).all()
         return render_template("index.html", tasks=tasks)
 
 
